@@ -1,7 +1,11 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useContext, useRef, useState } from "react";
 import "./Editor.css";
+import { TodoDispatchContext } from "../context/TodoContenxtProvider/contexts";
+// import { TodoDispatchContext } from "../App";
 
-export default function Editor({ onCreate }) {
+export default function Editor() {
+  // 컨텍스트에서 데이터 가져오기
+  const { onCreate } = useContext(TodoDispatchContext);
   const [content, setContet] = useState("");
   const contentRef = useRef();
 

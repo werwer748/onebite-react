@@ -1,4 +1,11 @@
-import { useCallback, useReducer, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import "./App.css";
 import Editor from "./components/Editor";
 import Header from "./components/Header";
@@ -23,6 +30,27 @@ import todoReducer from "./reducers/todoReducer";
  * TodoItem 컴포넌트처럼 상황에 따라 갯수가 많아질 수 있는 컴포넌트나
  * 함수를 굉장히 많이 가지고 있어서 코드가 무거운 경우에는 메모이제이션을 적용하는 것이 좋다.
  */
+
+/**
+ * React Context
+ * 컴포넌트간의 데이터를 전달하는 또 다른 방법
+ * 기존의 Props가 가지고 있던 단점을 해결할 수 있음
+ *
+ * props의 단점
+ * 부모에서 자식으로만 데이터를 전달할 수 있다.
+ * -> 부모 - 자식1 - 자식2 계층이 존재할 경우 모든 컴포넌트를 거쳐야 데이터를 전달할 수 있다.
+ * 이를 Prop drilling이라고 한다.
+ *
+ * React Context를 사용하여 Props drilling을 해결할 수 있다.
+ * Context라는 데이터 보관소를 만들어서 데이터를 저장하고 필요한 컴포넌트에서 사용할 수 있다.
+ */
+// 컴포넌트 외부에서 생성하여 사용한다. - 컴포넌트와 함께 리랜더도될 필요가 없으므로..
+// export const TodoContext = createContext();
+//? 꺠진 최적화를 해결하기 위해 TodoContext를 두개로 분리한다.
+//? TodoStateContext: 변경될 수 있는 값 - todos
+//? TodoDispatchContext: 변경할 수 있는 값 - onCreate, onUpdate, onDelete
+export const TodoStateContext = createContext();
+export const TodoDispatchContext = createContext();
 
 const mockData = [
   {
@@ -116,14 +144,52 @@ function App() {
     });
   }, []);
 
+  //* 함수들을 메모이제이션한 객체를 만들어 Dispatch Context에 전달한다.
+  const memoizedDispatch = useMemo(() => {
+    return { onCreate, onUpdate, onDelete };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="App">
       <Header />
-      <Editor onCreate={onCreate} />
-      <List todos={todos} onUpdate={onUpdate} onDelete={onDelete} />
-
-      {/* useReducer 테스트하는 코드 */}
-      {/* <Exam /> */}
+      {/* Context.Provider를 사용하여 데이터를 전달 */}
+      {/* 이렇게 Provider를 통해 묶인 컴포넌트들은 하위 컴포넌트들까지도 Context에 접근할 수 있다. */}
+      {
+        /* <TodoContext.Provider
+        /**
+         * value로 props를 전달하는 객체를 전달.
+         * 여기서 문제는 이 value Props로 전달한 객체가
+         * App컴포넌트의 상태가 변경(리렌더링)될 때마다 새로 생성된다.
+         * 그래서 기존에 작업해두었던 최적화가 깨지게 된다.
+         * -> 메모를 적용했더라도 useContext로 불러온값이 변경되면
+         * props가 변경된 것과 동일하게 취급되어 리렌더링이 일어난다.
+         *
+         * 이 문제를 해결하기 위해 TodoContext를 두개로 분리한다.
+         * 예를들어
+         * TodoStateContext: 변경될 수 있는 값 - todos
+         * TodoDispatchContext: 변경할 수 있는 값 - onCreate, onUpdate, onDelete
+         */
+        // value={{
+        //   todos,
+        //   // onCreate,
+        //   // onUpdate,
+        //   // onDelete,
+        // }}
+        // > */}
+      }
+      {/* 컨텍스트를 통해 데이터를 받기 떄문에 props를 전달할 필요가 없다. */}
+      {/* <Editor onCreate={onCreate} /> */}
+      {/* <List todos={todos} onUpdate={onUpdate} onDelete={onDelete} /> */}
+      {/* <Editor />
+        <List />
+      </TodoContext.Provider> */}
+      <TodoStateContext.Provider value={todos}>
+        <TodoDispatchContext.Provider value={memoizedDispatch}>
+          <Editor />
+          <List />
+        </TodoDispatchContext.Provider>
+      </TodoStateContext.Provider>
     </div>
   );
 }

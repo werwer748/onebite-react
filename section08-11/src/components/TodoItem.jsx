@@ -1,5 +1,7 @@
-import React, { memo } from "react";
+import React, { memo, useContext } from "react";
 import "./TodoItem.css";
+import { TodoDispatchContext } from "../context/TodoContenxtProvider/contexts";
+// import { TodoDispatchContext } from "../App";
 
 /**
  * props를 많이 받지만 컴포넌트당 받고있는 props 값은 모두 다르다.
@@ -15,7 +17,8 @@ import "./TodoItem.css";
  * 1. 부모 컴포넌트로부터 받는 함수를 모두 useCallback으로 감싸서 함수자체를 메모이제이션 처리한다.
  * 2. memo의 두번째 인자로 비교함수를 넣어서 특정 조건에 따라 리렌더링을 막는다.
  */
-function TodoItem({ id, isDone, content, date, onUpdate, onDelete }) {
+function TodoItem({ id, isDone, content, date }) {
+  const { onUpdate, onDelete } = useContext(TodoDispatchContext);
   const onChangeCheckbox = () => {
     onUpdate(id);
   };

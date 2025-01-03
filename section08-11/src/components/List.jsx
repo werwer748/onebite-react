@@ -1,8 +1,12 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import "./List.css";
 import TodoItem from "./TodoItem";
+import { TodoStateContext } from "../context/TodoContenxtProvider/contexts";
+// import { TodoStateContext } from "../App";
 
-export default function List({ todos, onUpdate, onDelete }) {
+export default function List() {
+  // value={todos}를 통해 전달받은 todos 객체로 전달한게 아니어서 구조분해 할 필요가 없다.
+  const todos = useContext(TodoStateContext);
   const [search, setSearch] = useState("");
 
   const onChangeSearch = (e) => {
@@ -68,8 +72,8 @@ export default function List({ todos, onUpdate, onDelete }) {
           <TodoItem //
             key={todo.id}
             {...todo}
-            onUpdate={onUpdate}
-            onDelete={onDelete}
+            // onUpdate={onUpdate}
+            // onDelete={onDelete}
           />
         ))}
       </div>
