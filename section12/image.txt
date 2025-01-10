@@ -1,0 +1,28 @@
+<div>
+  {/*
+    public 폴더와 assets 폴더의 차이
+    public 폴더: 
+    - 모듈러와 상관없이 그대로 사용할 파일을 담는 역할
+    - 따로 import 문으로 불러올 수는 없다.
+
+    assets 폴더: 
+    - 빌드할 때 번들링하여 vite가 최적화해주는 파일들을 담는 역할
+    - import 문으로 불러와서 사용할 수 있다(import 문으로 안불러오면 빌드시 제외됨)
+
+    빌드해서 확인해보면 public 폴더의 파일은 그대로 복사되어 들어가고 assets 폴더의 파일은 번들링되어 코드형태로 들어간다.
+    public 경로는 개발에서 입력한 경로 그대로 받음
+    assets 경로는 번들링된 data:어쩌구저쩌구 형태로 받음
+    assets 경로의 파일을 import하지않고 그냥 경로로 넣은 파일은 public에 복사가안되서 404 에러
+
+    무조건 assets 폴더를 써야하는것은 아니니 상황에 따라 적절히 사용하면 된다.
+  */}
+  {/* <img src="/emotion1.png" alt="happy" /> */}
+  {/*! 이게게 쓰면 빌드하고 망가짐 <img src={"/src/assets/emotion5.png"} alt="unhappy" /> */}
+
+  {/* 파일을 분리해서 이미지를 리턴해주는 함수를 통해 불러오기 */}
+  <img src={getEmotionImage(1)} alt="higher" />
+  <img src={getEmotionImage(2)} alt="happy" />
+  <img src={getEmotionImage(3)} alt="SoSo" />
+  <img src={getEmotionImage(4)} alt="NotBad" />
+  <img src={getEmotionImage(5)} alt="Bad" />
+</div>
