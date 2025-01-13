@@ -14,6 +14,8 @@ import { diaryReducer } from "./reducers/diaryReducer";
 import DiaryContext from "./context/diary";
 import HomeLayout from "./layouts/HomeLayout";
 import NewLayout from "./layouts/NewLayout";
+import EditLayout from "./layouts/EditLayout";
+import DiaryLayout from "./layouts/DiaryLayout";
 
 function App() {
   return (
@@ -26,8 +28,12 @@ function App() {
           <Route path="/new" element={<NewLayout />}>
             <Route index element={<New />} />
           </Route>
-          <Route path="/diary/:id" element={<Diary />} />
-          <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/diary/:id" element={<DiaryLayout />}>
+            <Route index element={<Diary />} />
+          </Route>
+          <Route path="/edit/:id" element={<EditLayout />}>
+            <Route index element={<Edit />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </DiaryContext>

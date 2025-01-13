@@ -12,7 +12,7 @@ function NewLayout() {
         title={"새 일기 쓰기"} //
         leftChild={<Button text={"< 뒤로 가기"} onClick={() => nav(-1)} />}
       />
-      <Outlet />
+      <Outlet context={{}} />
     </div>
   );
 }

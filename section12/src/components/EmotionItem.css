@@ -6,7 +6,7 @@
   text-align: center;
 }
 
-.emotion_img {
+.EmotionItem .emotion_img {
   width: 50%;
   margin-bottom: 10px;
 }

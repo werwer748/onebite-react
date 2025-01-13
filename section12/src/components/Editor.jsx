@@ -1,44 +1,32 @@
 import "./Editor.css";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import EmotionItem from "./EmotionItem";
 import Button from "./Button";
 import { BUTTON } from "../const/button";
 import { dateToString } from "../util/dateToString";
 import { DiaryDispatchContext } from "../context/diary/contexts";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { EmotionNames } from "../util/constants";
 
-const EmotionNames = [
-  {
-    emotionId: 1,
-    emotionName: "완전 좋음",
-  },
-  {
-    emotionId: 2,
-    emotionName: "좋음",
-  },
-  {
-    emotionId: 3,
-    emotionName: "그럭저럭",
-  },
-  {
-    emotionId: 4,
-    emotionName: "나쁨",
-  },
-  {
-    emotionId: 5,
-    emotionName: "끔찍함",
-  },
-];
-
-function Editor() {
+function Editor({ onSubmit }) {
   const { onCreate } = useContext(DiaryDispatchContext);
+  const { currentDiaryItem } = useOutletContext();
   const nav = useNavigate();
   const [insertInput, setInsertInput] = useState({
     createdDate: new Date(),
     emotionId: 3,
     content: "",
   });
+
+  useEffect(() => {
+    if (currentDiaryItem) {
+      setInsertInput({
+        ...currentDiaryItem,
+        createdDate: new Date(currentDiaryItem.createdDate),
+      });
+    }
+  }, [currentDiaryItem]);
 
   const onChangeInput = (e) => {
     const { name, value } = e.target;
@@ -50,11 +38,12 @@ function Editor() {
   };
 
   const onClickSubmit = () => {
-    onCreate(
-      insertInput.createdDate.getTime(),
-      insertInput.emotionId,
-      insertInput.content
-    );
+    // onCreate(
+    //   insertInput.createdDate.getTime(),
+    //   insertInput.emotionId,
+    //   insertInput.content
+    // );
+    onSubmit(insertInput);
     // 뒤로가기 막으면서 페이지 이동
     nav("/", { replace: true });
   };
