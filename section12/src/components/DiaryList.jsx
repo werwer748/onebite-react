@@ -36,7 +36,7 @@ function DiaryList() {
         />
       </div>
       <div className="list_wrapper">
-        {diary.length &&
+        {diary.length > 0 &&
           filterDiary(pivotDate, diary, sortType).map(
             (v) => <DiaryItem key={v.id} {...v} /> //
           )}

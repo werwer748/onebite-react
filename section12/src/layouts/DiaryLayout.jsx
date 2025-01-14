@@ -12,7 +12,6 @@ function DiaryLayout() {
 
   const title = useMemo(() => {
     if (!currentDiaryItem?.createdDate) {
-      console.log("currentDiaryItem?.createdDate");
       return "yyyy-mm-dd";
     }
     return dateToString(new Date(currentDiaryItem.createdDate));
